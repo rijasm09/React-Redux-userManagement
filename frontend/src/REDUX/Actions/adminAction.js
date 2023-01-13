@@ -15,6 +15,8 @@ import {
   ADMIN_USER_DELETE_FAIL,
   ADMIN_USER_DELETE_REQUEST,
   ADMIN_USER_DELETE_SUCCESS,
+  ADMIN_SELECT_REQUEST,
+  ADMIN_SELECT_DATA
 } from "../Constants/adminConstants";
 import axios from "axios";
 
@@ -73,6 +75,7 @@ export const adminHomeAction = () => async (dispatch) => {
 };
 
 export const adminuserBlock = (id) => async (dispatch) => {
+  console.log("block dispstch", id);
   try {
     dispatch({ type: ADMIN_USER_BLOCK_REQUSET });
 
@@ -101,10 +104,10 @@ export const adminuserBlock = (id) => async (dispatch) => {
 };
 
 
-export const admindeleteUser = (id) => async(dispatch)=>{
-  
+export const admindeleteUser = (id) => async (dispatch) => {
+
   try {
-    dispatch({type:ADMIN_USER_DELETE_REQUEST})
+    dispatch({ type: ADMIN_USER_DELETE_REQUEST })
 
     const token = JSON.parse(localStorage.getItem("adminInfo"));
     console.log(token.token);
@@ -113,13 +116,13 @@ export const admindeleteUser = (id) => async(dispatch)=>{
         Authorization: "Bearer " + token.token,
       },
     };
-    
-    
-    const {data} = await axios.get("http://localhost:5000/admin/delete?id="+id,config)
-    console.log(data+"THIS IS ");
-    
 
-    dispatch({type:ADMIN_USER_DELETE_SUCCESS,payload:data})
+
+    const { data } = await axios.get("http://localhost:5000/admin/delete?id=" + id, config)
+    console.log(data + "THIS IS ");
+
+
+    dispatch({ type: ADMIN_USER_DELETE_SUCCESS, payload: data })
 
   } catch (error) {
     dispatch({
@@ -133,27 +136,27 @@ export const admindeleteUser = (id) => async(dispatch)=>{
 }
 
 
-export const adminLogout = () => async (dispatch) =>{
+export const adminLogout = () => async (dispatch) => {
   localStorage.removeItem("adminInfo")
-  dispatch({type:ADMIN_LOGOUT})
+  dispatch({ type: ADMIN_LOGOUT })
 }
 
 
-export const adminSearch =  (searchkeyword)=> async(dispatch)=>{
+export const adminSearch = (searchkeyword) => async (dispatch) => {
 
   try {
-    dispatch({type:ADMIN_SEARCH_REQUEST})
-    const token = JSON.parse(localStorage.getItem("adminInfo"));
+    dispatch({ type: ADMIN_SEARCH_REQUEST })
+    const token = JSON.parse(localStorage.getItem("adminInfo"));  
     console.log(token.token);
     const config = {
       headers: {
         Authorization: "Bearer " + token.token,
       },
     };
-    
-    const {data} = await axios.post("http://localhost:5000/admin/search",{searchkeyword},config)
 
-    dispatch({type:ADMIN_SEARCH_SUCCESS,payload:data})
+    const { data } = await axios.post("http://localhost:5000/admin/search", { searchkeyword }, config)
+
+    dispatch({ type: ADMIN_SEARCH_SUCCESS, payload: data })
   } catch (error) {
     dispatch({
       type: ADMIN_SEARCH_FAIL,
@@ -162,5 +165,56 @@ export const adminSearch =  (searchkeyword)=> async(dispatch)=>{
           ? error.response.data.message
           : error.response.data,
     });
+  }
+}
+
+export const adminUpdate = (data) => async (dispatch) => {
+  console.log("adminUpdate data", data);
+  try {
+    // dispatch({
+    //     type:ADMIN_SELECT_REQUEST
+    // })
+    dispatch({
+      type: ADMIN_SELECT_DATA,
+      payload: data
+    })
+  } catch (error) {
+
+  }
+}
+
+export const adminUpdateUser = (id, firstname, lastname, email, oldEmail) => async (dispatch) => {
+
+  // console.log("we are in action.js",id,firstname,lastname,email,oldEmail);
+
+  try {
+
+    // console.log(id + "THIS IS ID in userupdate");
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    axios.post(
+      'http://localhost:5000/admin/update', { id, firstname, lastname, email, oldEmail },
+      config
+    ).then((Data) => {
+      console.log('updated data from server', Data);
+      localStorage.setItem('editedUser', JSON.stringify(Data))
+      dispatch({
+        type: ADMIN_SELECT_DATA,
+        payload: Data.data
+      })
+    }).catch((err) => {
+      console.log(err)
+      // dispatch({
+      //   type: ADMIN_UPDATE_FAILED,
+      //   payload: err.response
+      // })
+    })
+  } catch (error) {
+    console.log(error)
   }
 }

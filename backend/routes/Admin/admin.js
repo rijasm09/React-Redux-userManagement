@@ -20,5 +20,11 @@ router.post("/search",admin.searchUser)
 //delete user 
 router.route("/delete").get(protect,admin.deleteUser)
 
+// update user
+router.post("/update",admin.updateUser)
+
+// router.route("/update").post(admin.updateUser)
+
+
 
 module.exports = router;

@@ -14,6 +14,7 @@ import {
   adminHomeReducer,
   adminLoginReducer,
   adminSearchReducer,
+  adminUpdateReducer
 } from "./Reducers/adminReducer";
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   adminSearch: adminSearchReducer,
   userProfile: userprofilereduer,
   userImage: userImageUplaodReducer,
+  adminUpdate: adminUpdateReducer
 });
 
 let userinfo = JSON.parse(localStorage.getItem("userInfo"));

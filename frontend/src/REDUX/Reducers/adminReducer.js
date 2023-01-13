@@ -14,6 +14,7 @@ import {
   ADMIN_USER_DELETE_FAIL,
   ADMIN_USER_DELETE_REQUEST,
   ADMIN_USER_DELETE_SUCCESS,
+  ADMIN_SELECT_DATA
 } from "../Constants/adminConstants";
 
 export const adminLoginReducer = (state = {}, action) => {
@@ -60,6 +61,7 @@ export const adminBlockReducer = (state = {}, action) => {
 };
 
 export const adminDeleteReducer = (state = {}, action) => {
+
   switch (action.type) {
     case ADMIN_USER_DELETE_REQUEST:
       return { deleteloading: true };
@@ -74,16 +76,36 @@ export const adminDeleteReducer = (state = {}, action) => {
   }
 };
 
-export const adminSearchReducer = (state={},action)=>{
+export const adminSearchReducer = (state = {}, action) => {
   switch (action.type) {
     case ADMIN_SEARCH_REQUEST:
-      return {searchloading:true}
+      return { searchloading: true }
 
     case ADMIN_SEARCH_SUCCESS:
-      return {searchloading:false,searchresult:action.payload}
-    
+      return { searchloading: false, searchresult: action.payload }
+
     case ADMIN_SEARCH_FAIL:
-      return {loading:false,searcherror:action.payload}
+      return { loading: false, searcherror: action.payload }
+    default:
+      return state;
+  }
+}
+
+export const adminUpdateReducer = (state = {}, action) => {
+  console.log("in reducer",action.payload);
+
+  switch (action.type) {
+
+    case ADMIN_SELECT_DATA:
+
+      return {
+        ...state,
+        // adminloading: false,
+        // emailStatus: false,
+        // redirectStatus: true,
+        selectedUser: action.payload
+      }
+
     default:
       return state;
   }

@@ -27,14 +27,16 @@ export const userLogin = (email, password) => async (dispatch) => {
         "Content-type": "application/json",
       },
     };
-    console.log("hddd");
+    // console.log("hddd");
     const { data } = await axios.post(
       "http://localhost:5000/login",
       { email, password },
       config
     );
+    console.log("data for token",data);
     dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
     localStorage.setItem("userInfo", JSON.stringify(data));
+    
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -51,6 +53,7 @@ export const userSignup =
     console.log(firstname);
     try {
       dispatch({ type: USER_SIGNUP_REQUEST });
+
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -62,7 +65,9 @@ export const userSignup =
         { firstname, lastname, email, password },
         config
       );
+
       dispatch({ type: USER_SIGNUP_SUCCESS, payload: data });
+
     } catch (error) {
       dispatch({
         type: USER_SIGNUP_FAIL,

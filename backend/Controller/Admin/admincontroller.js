@@ -36,4 +36,50 @@ exports.deleteUser = async (req, res) => {
   } catch (error) {
     res.status(400).json(err.message);
   }
+
+
+
+
+
+
+
+
 };
+
+// exports.updateUser=(req,res)=>{
+//   console.log("update",req.body);
+//   adminHelpers.doUpdateUser(req.body).then((data)=>{
+//     //  if(data == true){
+//     //   res.status(400).json("email is already there")
+//     //  }else{
+//       console.log(data);
+//       res.status(200).json(data)
+//     //  }
+//   })
+// }
+
+exports.updateUser = async (req, res) => {
+  // let id = req.query.id;
+
+  // console.log(id + "THIS IS THE PHOYO");
+  console.log("TJHO O _ JAFDKAJSFHD FJLKLJKDSHF KHFJKLSDH FJSKDHF ");
+  console.log("update", req.body);
+
+  try {
+    console.log("insd try");
+    userSchema
+      .updateOne({ _id: req.body.id }, { $set: { firstname:req.body.firstname,lastname:req.body.lastname,email:req.body.email   } })
+      .then((data) => {
+        console.log("database updated data",data);
+        res.status(200).json("DATA UPDATED");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+
+};
+

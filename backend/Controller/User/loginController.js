@@ -47,7 +47,7 @@ exports.loginPost = async (req, res) => {
 
 exports.addPhoto = async (req, res) => {
   let id = req.query.id;
-  let pic = req.body.photo;
+  let pic = req.body.photo; 
   console.log(id + "THIS IS THE PHOYO");
   console.log("TJHO O _ JAFDKAJSFHD FJLKLJKDSHF KHFJKLSDH FJSKDHF ");
   console.log(pic);

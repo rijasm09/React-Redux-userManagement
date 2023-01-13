@@ -1,58 +1,94 @@
 import React, { useEffect, useState } from 'react'
-import { Alert } from 'react-bootstrap'
+import { Alert, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { userSignup } from '../../../REDUX/Actions/userActions'
-import './Signup.css'
+import './Add.css'
 import { Form, Button } from 'semantic-ui-react';
 import { useForm } from "react-hook-form";
+import { adminLogout } from '../../../REDUX/Actions/adminAction'
+import { adminHomeAction } from '../../../REDUX/Actions/adminAction';
 
 
-function Signup() {
+
+function addUser() {
 
 
   const [firstname, setfirstname] = useState('')
   const [lastname, setlastname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const Signup = useSelector(state => state.userSignup)
-  const { loading, error, userInfo } = Signup;
+  //   const Signup = useSelector(state => state.userSignup)
+  //   const { loading, error, userInfo } = Signup;
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [showL, setShowL] = useState(false)
+
+  const admindelete = useSelector((state) => state.adminDelete)
+  let { deleteloading, deleteerror, deletedata } = admindelete
+  const adminblock = useSelector((state) => state.adminBlock)
+  let { blockloading, blockerror, blockdata } = adminblock;
+
+  useEffect(() => {
+    let admindata = localStorage.getItem("adminInfo")
+    if (admindata != null) {
+      dispatch(adminHomeAction())
+    } else {
+      navigate("/admin/login")
+    }
+
+    setTimeout(() => {
+      deletedata = false
+    }, 3000);
+
+  }, [blockdata, deletedata])
+
 
   const onSubmit = (data, e) => {
     console.log(data);
     e.preventDefault()
     dispatch(userSignup(firstname, lastname, email, password))
+    navigate("/admin")
   }
 
-  // const handlesubmit = (e) => {
-  //   e.preventDefault()
-  //   dispatch(userSignup(firstname, lastname, email, password))
-  // }
+  const handlesubmit = (e) => {
+    e.preventDefault()
+    // dispatch(userSignup(firstname, lastname, email, password))
+  }
 
-  useEffect(() => {
-    let userinfo = localStorage.getItem("userInfo")
-    if (userinfo) {
-      navigate("/")
-    }
-    console.log("HEHHEH");
-    if (userInfo) {
-      navigate("/login")
-    }
-  }, [userInfo])
-  console.log(userInfo);
+  const logout = () => {
+    // dispatch(adminLogout())
+    // navigate("/admin/login")
+    setShowL(true)
+  }
+  const handleLogout = (id) => {
+    dispatch(adminLogout())
+    navigate("/admin/login")
+    setShowL(false)
+  }
+  const handleCloseL = () => {
+    setShowL(false)
+  }
+
+
+
 
   return (
     <div>
+                <Button className='btn btn-warning' style={{ right: 2, marginRight: 10 }} onClick={logout}> <i class="fa-solid fa-power-off"></i> LOGOUT</Button>
+
       <>
+      
         <div className='bagrounds' >
 
+
           <div className='forms' >
+            
 
             <div className='formcontainers '>
+              
 
               <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Field>
@@ -111,11 +147,27 @@ function Signup() {
                 <strong style={{ color: "red" }}>{errors.password && <p>Please check the Password</p>}</strong>
 
                 <Button className='button1' style={{ backgroundColor: '#03fcdb' }} type='submit'>Submit</Button>
-
-                <Link to={'/login'}>
-                  <button className='button2 mt-2' style={{ backgroundColor: 'black' }}>Login</button>
+                <Link to={'/admin'}>
+                  <Button className='btn btn-sucess' style={{ right: 0, }} > <i class="fa-solid fa-power-off"></i> HOME</Button>
                 </Link>
+
               </Form>
+
+              {/* USER LOGOUT MODAL */}
+              <Modal show={showL} onHide={handleCloseL} animation={false}>
+                <Modal.Header closeButton>
+                  <Modal.Title></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure to Logout..?</Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => { handleLogout() }}>
+                    Yes
+                  </Button>
+                  <Button variant="primary" onClick={handleCloseL}>
+                    Cancel
+                  </Button>
+                </Modal.Footer>
+              </Modal>
 
 
             </div>
@@ -127,4 +179,4 @@ function Signup() {
   )
 }
 
-export default Signup
+export default addUser
